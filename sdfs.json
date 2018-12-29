@@ -1,0 +1,9 @@
+{
+    "DBDriver":"mysql",
+    "Dsn":"root:hello@/sdfs_test",
+    "NameNodeSRPCServerAddr":"192.168.56.100:11701",
+    "DefaultNetBlockCap":2097152,
+    "DefaultMemBlockCap":2097152,
+    "DefaultMemBlocksLimit":64,
+    "PProfListenAddr":"192.168.56.100:11501"
+}

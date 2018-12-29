@@ -525,6 +525,13 @@ if test "$USE_HDFS"; then
   JAVA_LDFLAGS="$JAVA_LDFLAGS $HDFS_LDFLAGS"
 fi
 
+if test "$USE_SDFS"; then
+  SDFS_CCFLAGS="-I$GO_SDFS_INCLUDE -DUSE_SDFS"
+  SDFS_LDFLAGS="-L$GO_SDFS_LIB -lsdfs"
+  COMMON_FLAGS="$COMMON_FLAGS $SDFS_CCFLAGS"
+  PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS $SDFS_LDFLAGS"
+fi
+
 if test -z "$PORTABLE"; then
   if test -n "`echo $TARGET_ARCHITECTURE | grep ^ppc64`"; then
     # Tune for this POWER processor, treating '+' models as base models

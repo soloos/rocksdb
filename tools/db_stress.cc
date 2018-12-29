@@ -46,6 +46,7 @@ int main() {
 #include "db/db_impl.h"
 #include "db/version_set.h"
 #include "hdfs/env_hdfs.h"
+#include "sdfs/env_sdfs.h"
 #include "monitoring/histogram.h"
 #include "options/options_helper.h"
 #include "port/port.h"

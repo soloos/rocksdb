@@ -36,6 +36,8 @@
 #include "db/malloc_stats.h"
 #include "db/version_set.h"
 #include "hdfs/env_hdfs.h"
+#include "sdfs/sdfs.h"
+#include "sdfs/env_sdfs.h"
 #include "monitoring/histogram.h"
 #include "monitoring/statistics.h"
 #include "options/cf_options.h"
@@ -823,6 +825,8 @@ DEFINE_string(env_uri, "", "URI for registry Env lookup. Mutually exclusive"
 #endif  // ROCKSDB_LITE
 DEFINE_string(hdfs, "", "Name of hdfs environment. Mutually exclusive with"
               " --env_uri.");
+DEFINE_string(sdfs, "", "Name of sdfs environment. Mutually exclusive with"
+                            " --env_uri.");
 static rocksdb::Env* FLAGS_env = rocksdb::Env::Default();
 
 DEFINE_int64(stats_interval, 0, "Stats are reported every N operations when "
@@ -2335,10 +2339,10 @@ class Benchmark {
     }
 
     if (report_file_operations_) {
-      if (!FLAGS_hdfs.empty()) {
-        fprintf(stderr,
-                "--hdfs and --report_file_operations cannot be enabled "
-                "at the same time");
+        if (!FLAGS_hdfs.empty() || !FLAGS_sdfs.empty()) {
+            fprintf(stderr,
+                    "--hdfs / --sdfs and --report_file_operations cannot be enabled "
+                    "at the same time");
         exit(1);
       }
       FLAGS_env = new ReportFileOpEnv(rocksdb::Env::Default());
@@ -5784,8 +5788,11 @@ int db_bench_tool(int argc, char** argv) {
   if (!FLAGS_hdfs.empty() && !FLAGS_env_uri.empty()) {
     fprintf(stderr, "Cannot provide both --hdfs and --env_uri.\n");
     exit(1);
+  } else if (!FLAGS_sdfs.empty() && !FLAGS_env_uri.empty()) {
+      fprintf(stderr, "Cannot provide both --sdfs and --env_uri.\n");
+      exit(1);
   } else if (!FLAGS_env_uri.empty()) {
-    FLAGS_env = NewCustomObject<Env>(FLAGS_env_uri, &custom_env_guard);
+      FLAGS_env = NewCustomObject<Env>(FLAGS_env_uri, &custom_env_guard);
     if (FLAGS_env == nullptr) {
       fprintf(stderr, "No Env registered for URI: %s\n", FLAGS_env_uri.c_str());
       exit(1);
@@ -5793,7 +5800,10 @@ int db_bench_tool(int argc, char** argv) {
   }
 #endif  // ROCKSDB_LITE
   if (!FLAGS_hdfs.empty()) {
-    FLAGS_env  = new rocksdb::HdfsEnv(FLAGS_hdfs);
+      FLAGS_env  = new rocksdb::HdfsEnv(FLAGS_hdfs);
+  }
+  if (!FLAGS_sdfs.empty()) {
+      FLAGS_env  = new rocksdb::SdfsEnv(FLAGS_sdfs);
   }
 
   if (!strcasecmp(FLAGS_compaction_fadvice.c_str(), "NONE"))
