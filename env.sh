@@ -1,4 +1,5 @@
 #!/bin/bash
+ulimit -c unlimited 
 export USE_SDFS=1
 export GO_SDFS_LIB="/opt/soloos/sdfs/bin/"
 export GO_SDFS_INCLUDE="/opt/soloos/sdfs/bin/"
