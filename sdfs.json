@@ -3,7 +3,7 @@
     "SNetDriverServeAddr": "http://192.168.56.100:11703",
     "NameNodePeerID": "NAME_NODE_100000000000000000000000000000000000000000000000000000",
     "DBDriver":"mysql",
-    "Dsn":"root:hello@/sdfs_test",
+    "Dsn":"root:hello@/soloos_test",
     "#DBDriver":"sqlite3",
     "#Dsn":"/tmp/sdfs.db",
     "DefaultNetBlockCap":2097152,
